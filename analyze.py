@@ -27,7 +27,7 @@ def _get_issues():
     # There are files to analyze
     result = subprocess.run(
         analysis_command,
-        capture_output=True,       
+        capture_output=True,
     )
 
     # Read the json, convert it into DS's format.
@@ -53,3 +53,79 @@ issues = _get_issues()
 
 # Publish to DeepSource
 publish_results(prepare_result(issues))
+
+
+class Report:
+    def __init__(self):
+        self.issues = []
+        self.errors = []
+        self.metrics = []
+
+
+class CLIOutputParser:
+    def __init__(self, result):
+        self.result = result
+
+    def clean(self):
+        pass
+
+    def process_results(self):
+        if self.result.returncode not in self.ALLOWED_EXIT_CODES:
+            raise OutputProcessingError(f"Invalid exit code {self.result.returncode}")
+
+        resultlines = getattr(self.result, self.output_stream).decode().split("\n")
+
+        report = Report()
+
+        for line in resultlines:
+            report.issues.append(self._process_line(line, self.pattern_matching_func))
+
+    def _process_line(self, line, pattern_matching_func):
+        return Issue(*pattern_matching_func(line))
+
+
+class Pep8CLIOutputParser(CLIOutputParser):
+    ALLOWED_EXIT_CODES = [0,]
+    output_stream = "stdout"
+
+    def pattern_matching_func(self):
+        regex = re.compile(
+            r"(?P<filename>[\w\.\/]+):(?P<line>\d+):((?P<column>\d+:)?) (?P<error_code>[\w\-]+) (?P<message>.*)"
+        )
+        def matcher(line):
+            matches = regex.match(line)
+            return (
+                matches.group('filename'),
+                matches.group('line'),
+                matches.group('column'),
+                matches.group('error_code'),
+                matches.group('message'),
+            )
+
+        return matcher
+
+
+class CLIRunner(Runner):
+    @property
+    def command(self):
+        raise NotImplementedError
+
+    @property
+    def report_processor(self):
+        raise NotImplementedError
+
+    def run(self):
+        results = subprocess.run(
+            self.command,
+            capture_output=True,
+        )
+
+        return self.report_processor(results).process_results()
+
+
+class AnsibleCLIRunner(CLIRunner):
+    report_processor = Pep8CLIReportParser
+
+    @property
+    def command(self):
+        return ["ansible-lint", "-p", self.files]
