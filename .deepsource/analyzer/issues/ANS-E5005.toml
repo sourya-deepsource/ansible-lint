@@ -1,0 +1,36 @@
+title = "Referenced files must exist"
+severity = "minor"
+category = "bug-risk"
+description = """
+All files referenced by by `include` or `import_tasks` must exist. The check excludes files with jinja2 templates in the filename.
+
+Example :
+
+* When `include` is being used:
+
+```yml
+---
+- hosts: webservers
+  vars:
+    varset: varset
+  tasks:
+    - include: nestedincludes.yml tags=nested
+    - include: "{{ varnotset }}.yml"
+    - include: "{{ varset }}.yml"
+    - include: "directory with spaces/main.yml"
+```
+
+* When `import_tasks` is being used :
+
+```yml
+---
+- hosts: webservers
+  vars:
+    varset: varset
+  tasks:
+    - import_tasks: nestedincludes.yml tags=nested
+    - import_tasks: "{{ varnotset }}.yml"
+    - import_tasks: "{{ varset }}.yml"
+    - import_tasks: "directory with spaces/main.yml"
+```
+"""

@@ -1,5 +1,5 @@
-name = "Hackstreet Boys"
-description = "Raise my issues on deepsource"
-analysis_command = "python3 /app/analyze.py"
+name = "Ansible Lint"
+description = "Run ansible-lint on playbooks, roles and collections."
+analysis_command = "python3 /app/main.py"
 category = "language"
 visibility = "public"

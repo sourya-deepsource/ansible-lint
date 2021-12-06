@@ -1,0 +1,8 @@
+title = "Commands should not change things if nothing needs to be done"
+severity = "major"
+category = "bug-risk"
+description = """
+Commands should either read information (and thus set `changed_when`) or not do something if it has
+already been done (using `creates`/`removes`) or only do it if another check has a
+particular result (`when`).
+"""

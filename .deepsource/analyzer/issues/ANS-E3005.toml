@@ -1,0 +1,14 @@
+title = "Prefer using `shell` only when shell functionality is required"
+severity = "major"
+category = "bug-risk"
+description = """
+`shell` should only be used when piping, redirecting or chaining commands are
+required.
+
+For example :
+
+```yml
+- name: chain two shell commands
+    shell: echo hello && echo goodbye
+```
+"""

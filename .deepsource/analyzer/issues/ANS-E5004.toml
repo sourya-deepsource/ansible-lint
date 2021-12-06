@@ -1,0 +1,10 @@
+title = "Found the usage of `local_action`"
+severity = "minor"
+category = "style"
+description = """
+Using `delegate_to: localhost` is recommended over `local_action` since
+`local_action` is rarely seen these days and can be deemed equivalent to
+`delegate_to: localhost` in terms of advantages and disadvantages, but with the
+additional disadvantage of being a very unusual style, adding a readability
+penalty.
+"""
