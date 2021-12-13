@@ -24,6 +24,7 @@ ISSUE_CODES_MAP = {
 
 
 class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
+    ALLOWED_EXIT_CODES = [0, 2]
     def get_issues(self):
         issues = super().get_issues()
 
@@ -41,7 +42,7 @@ class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
 
 class AnsibleCLIRunner(CLIRunner):
     report_processor = AnsibleLintOutputParser
-    command = ["ansible-lint", "-p", *config.files]
+    command = ["ansible-lint", "--nocolor", "-p", *config.files]
 
 
 def main():

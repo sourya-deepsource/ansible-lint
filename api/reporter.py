@@ -31,7 +31,7 @@ class Pep8CLIOutputProcessor(CLIOutputProcessor):
 
     def get_issues(self):
         regex = re.compile(
-            r"(?P<filename>[\w\.\/]+):(?P<line>\d+):((?P<column>\d+:)?) (?P<error_code>[\w\-]+) (?P<message>.*)"
+            r"(?P<filename>[\w\.\/-]+):(?P<line>\d+):((?P<column>\d+):)? (?P<error_code>[\w\-]+) (?P<message>.*)"
         )
 
         def matcher(line: str) -> Issue:
@@ -39,14 +39,17 @@ class Pep8CLIOutputProcessor(CLIOutputProcessor):
             if not matches:
                 return
 
+            line = int(matches.group('line')) if matches.group('line') else 0
+            column = int(matches.group('column')) if matches.group('column') else 0
+
             return Issue(
                 location=Location(
                     path=matches.group('filename'),
                     begin=Coordinate(
-                        matches.group('line'), matches.group('column'),
+                        line, column
                     ),
                     end=Coordinate(
-                        matches.group('line'), matches.group('column'),
+                        line, column
                     ),
                 ),
                 issue_code=matches.group('error_code'),
@@ -54,4 +57,4 @@ class Pep8CLIOutputProcessor(CLIOutputProcessor):
             )
 
         resultlines = getattr(self.result, self.output_stream).decode().split("\n")
-        return [matcher(line) for line in resultlines if matcher(line)]
+        return list(filter(None, [matcher(line) for line in resultlines]))
