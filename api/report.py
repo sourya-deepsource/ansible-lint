@@ -2,6 +2,7 @@ import json
 import os
 
 from dataclasses import dataclass
+import subprocess
 
 
 CODEPATH = os.environ.get("CODE_PATH")
@@ -69,3 +70,14 @@ class Report:
                     },
                 ),
             )
+
+    def publish(self, path=None):
+        if not path:
+            path = f"{os.environ.get('TOOLBOX_PATH')}/analysis_results.json"
+
+        results = subprocess.run(
+            [f"{os.getenv('TOOLBOX_PATH')}/marvin", "--publish-report", f"{path}"],
+        )
+
+        if results.returncode != 0:
+            print("Couldn't trigger publish. Maybe it'll auto-publish.")

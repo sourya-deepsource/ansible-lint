@@ -21,6 +21,7 @@ class CLIOutputProcessor:
         # TODO: Add for metrics and errors
         report.issues = self.get_issues()
         report.write()
+        report.publish()
 
         return report
 
