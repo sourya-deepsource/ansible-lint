@@ -1,16 +1,32 @@
 title = "Mercurial checkouts should have explicit revision"
-severity = "minor"
-category = "antipattern"
+severity = "major"
+category = "bug-risk"
 description = """
 All version control checkouts must point to an explicit commit or tag, not just `latest`.
 
-Example :
+Relying on `latest` may lead to breakages in the application if the latest version is unstable or not meant for use with the current system.
+
+## Example
+
+### Bad practice
 
 ```yml
 - hg:
     repo: https://bitbucket.org/user/repo1
     dest: /home/user/repo1
-    revision: stable
+    revision: latest
+    purge: yes
+```
+
+### Recommended
+
+```yml
+- hg:
+    repo: https://bitbucket.org/user/repo1
+    dest: /home/user/repo1
+    revision: v1.2.3
     purge: yes
 ```
 """
+
+weight = 80

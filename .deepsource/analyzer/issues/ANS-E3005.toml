@@ -1,14 +1,26 @@
-title = "Prefer using `shell` only when shell functionality is required"
+title = "Use `command` instead of `shell`"
 severity = "major"
-category = "bug-risk"
+category = "antipattern"
 description = """
-`shell` should only be used when piping, redirecting or chaining commands are
-required.
+Use shell only when shell functionality is required.
 
-For example :
+Shell should only be used when piping, redirecting or chaining commands (and Ansible would be preferred for some of those!)
+
+## Example
+
+### Bad practice
+
+```yml
+- name: command should be used here
+  shell: echo hello
+```
+
+### Recommended
 
 ```yml
 - name: chain two shell commands
-    shell: echo hello && echo goodbye
+  shell: echo hello && echo goodbye
 ```
 """
+
+weight = 75

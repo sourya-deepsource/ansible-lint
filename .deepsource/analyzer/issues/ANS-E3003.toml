@@ -1,27 +1,25 @@
-title = "Detected use of `command` instead of `module`"
+title = "Use `module` instead of `command`"
 severity = "major"
 category = "performance"
 description = """
 Executing a command when there is an Ansible module is not recommended.
 
-Ansible has two generic ways of performing a task, using Ansible modules or using the `command`/`shell` module.
-Ansible modules are developed by the Ansible community and third party vendors.
-For example : `rpm` , `docker` , `kubernetes` , `yum` , `azure` etc.
+Ansible has two generic ways of performing a task, using Ansible modules or using the `command`/`shell` module.  Ansible modules are developed by the Ansible community and third party vendors like `rpm` , `docker` , `kubernetes` , `yum` , `azure` etc.
 
-`command` module allows you to run a shell command without actually invoking the
-shell but using command module is a bad idea, since it’s not idempotent in
-nature, the developer is responsible for handling the idempotency of the task.
+`command` module allows you to run a shell command without actually invoking the shell but using command module is a bad idea, since it’s not idempotent in nature, the developer is responsible for handling the idempotency of the task.
 
-Example :
+## Example
 
-Instead of using the `command` module as used here :
+### Bad practice
 
 ```yml
 - name: reboot the servers
   command: /sbin/reboot -t now
 ```
 
-It is recommended to use a module with arguments :
+### Recommended
+
+Use an Ansible module with arguments.
 
 ```yml
 - name: restart webserver
@@ -30,3 +28,5 @@ It is recommended to use a module with arguments :
     state: restarted
 ```
 """
+
+weight = 70

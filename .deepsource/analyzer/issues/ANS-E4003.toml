@@ -1,15 +1,30 @@
-title = "Should not use `latest` in package installs"
-severity = "minor"
+title = "Package installs should not use `latest`"
+severity = "major"
 category = "bug-risk"
 description = """
-Package installs should use `state=present` with or without a version.
+Package installs should use `state: present` with or without a version.
 
-Example :
+Use `latest` ONLY if they are supported by the underlying package module(s) executed.
+
+## Example
+
+### Bad practice
 
 ```yml
-- name: install package
+- name: install packages
+  package:
+    name: <name-of-the-package>
+    state: latest
+```
+
+### Recommended
+
+```yml
+- name: install packages
   package:
     name: <name-of-the-package>
     state: present
 ```
 """
+
+weight = 80

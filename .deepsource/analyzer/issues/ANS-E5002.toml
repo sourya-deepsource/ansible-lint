@@ -1,7 +1,8 @@
 title = "All tasks should be named uniquely"
 severity = "minor"
-category = "style"
+category = "antipattern"
 description = """
-All tasks should have a distinct name for readability and for `--start-at-task` to
-work.
+Task names are optional, but extremely useful. In its output, Ansible shows you the name of each task it runs. Choosing names that describe what each task does and why improves readability. It also enables the usage of `--start-at-task`.
 """
+
+weight = 60

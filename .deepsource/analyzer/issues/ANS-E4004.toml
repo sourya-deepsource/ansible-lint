@@ -1,10 +1,32 @@
 title = "Relative path is not needed in role"
 severity = "major"
-category = "bug-risk"
+category = "antipattern"
 description = """
-`copy` and `template` do not need to use relative path for `src`.
+`copy` and `template` do not need to use relative path for `src`. This removes the need for knowing the location of the root directory.
 
-Example of using `src` :
+## Example
+
+### Bad practice
+
+```yml
+- name: Copy file with owner and permissions
+  copy:
+    src: {{ playbook_dir }}/../../srv/myfiles/foo.conf
+    dest: /etc/foo.conf
+    owner: foo
+    group: foo
+    mode: '0644'
+
+- name: Template a file to /etc/file.conf
+  template:
+    src: {{ playbook_dir }}/../../srv/mytemplates/foo.j2
+    dest: /etc/file.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+```
+
+### Recommended
 
 ```yml
 - name: Copy file with owner and permissions
@@ -14,11 +36,7 @@ Example of using `src` :
     owner: foo
     group: foo
     mode: '0644'
-```
 
-Example with using `template`:
-
-```yml
 - name: Template a file to /etc/file.conf
   template:
     src: /mytemplates/foo.j2
@@ -28,3 +46,5 @@ Example with using `template`:
     mode: '0644'
 ```
 """
+
+weight = 70

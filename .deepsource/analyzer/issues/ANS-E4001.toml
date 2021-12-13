@@ -1,10 +1,22 @@
 title = "Git checkouts must contain explicit version"
-severity = "minor"
-category = "antipattern"
+severity = "major"
+category = "bug-risk"
 description = """
 All version control checkouts must point to an explicit commit or tag, not just `latest`.
 
-Example :
+Relying on `latest` may lead to breakages in the application if the latest version is unstable or not meant for use with the current system.
+
+## Example
+
+### Bad practice
+```yml
+- git:
+    repo: 'https://foosball.example.org/path/to/repo.git'
+    dest: /srv/checkout
+    version: latest
+```
+
+### Recommended
 
 ```yml
 - git:
@@ -13,3 +25,5 @@ Example :
     version: release-0.22
 ```
 """
+
+weight = 80

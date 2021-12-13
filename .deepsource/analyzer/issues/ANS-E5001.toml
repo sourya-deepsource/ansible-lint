@@ -1,18 +1,30 @@
 title = "`become_user` requires `become` to work as expected"
 severity = "major"
-category = "antipattern"
+category = "bug-risk"
 description = """
-`become_user` without `become` will not actually change user.
 
-For example, in the example below the command will be run with `apache` as the
-user :
+`become_user` without `become: yes` will not actually change user.
+
+When `become` is set to `yes` but `become_user` is not set, user `root` is set.
+
+## Example
+
+### Bad practice
 
 ```yml
 - name: Run a command as the apache user
   command: somecommand
-  become: true
   become_user: apache
 ```
 
-The default value of `become_user` is `root` when not specifically set.
+### Recommended
+
+```yml
+- name: Run a command as the apache user
+  command: somecommand
+  become: yes
+  become_user: apache
+```
 """
+
+weight = 80

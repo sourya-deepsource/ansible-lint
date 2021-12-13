@@ -2,7 +2,26 @@ title = "Commands should not change things if nothing needs to be done"
 severity = "major"
 category = "bug-risk"
 description = """
-Commands should either read information (and thus set `changed_when`) or not do something if it has
-already been done (using `creates`/`removes`) or only do it if another check has a
-particular result (`when`).
+Tasks should tell Ansible when to return `changed`, unless the task only reads information. To do this, set `changed_when`, use the `creates` or `removes` argument, or use `when` to run the task only if another check has a particular result.
+
+<!--more-->
+## Example
+### Bad practice
+```yaml
+- name: does not handle any output or return codes
+  ansible.builtin.command: cat {{ myfile|quote }}
+```
+
+### Recommended
+
+This snippet uses the output and the return code of the command.
+
+```yaml
+- name: handle shell output with return code
+  ansible.builtin.shell: cat {{ myfile|quote }}
+  register: myoutput
+  changed_when: myoutput.rc != 0
+```
 """
+
+weight = 75

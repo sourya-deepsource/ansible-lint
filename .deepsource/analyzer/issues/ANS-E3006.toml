@@ -1,24 +1,14 @@
 title = "Shells that use pipes should set the `pipefail` option"
-severity = "minor"
+severity = "major"
 category = "bug-risk"
 description = """
-Without the pipefail option set, a shell command that implements a pipeline can
-fail and still return 0.
+Without the pipefail option set, a shell command that implements a pipeline can fail and still return 0.
 
 If any part of the pipeline other than the terminal command fails, the whole pipeline will still return 0, which may be considered a success by Ansible. Pipefail is available in the bash shell.
 
-For example :
+## Example
 
-It is recommended to use `pipefail` with `shell` command that uses pipes like this :
-
-```yml
-- name: Example task
- shell: set -o pipefail && ls -ld /tmp | tr -d tmp
- args:
-   executable: /usr/bin/bash
-```
-
-instead of using just the bare command :
+### Bad practice
 
 ```yml
 - name: Example task
@@ -26,4 +16,17 @@ instead of using just the bare command :
  args:
    executable: /usr/bin/bash
 ```
+
+### Recommended
+
+It is recommended to use `pipefail` with `shell` commands that use pipes.
+
+```yml
+- name: Example task
+  shell: set -o pipefail && ls -ld /tmp | tr -d tmp
+  args:
+    executable: /usr/bin/bash
+```
 """
+
+weight = 80

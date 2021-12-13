@@ -4,19 +4,20 @@ category = "antipattern"
 description = """
 Executing a command when there are arguments to modules is not recommended.
 
-Using `command` module is a bad idea, since it’s not idempotent in nature, the
-developer is responsible for handling the idempotency of the task.
+Using `command` module is a bad idea, since it’s not idempotent in nature, the developer is responsible for handling the idempotency of the task.
 
-Example :
+## Example
 
-Instead of using `command` as used in the below snippet :
+### Bad practice
 
 ```yml
 - name: restart nginx
   command: sudo systemctl restart nginx
 ```
 
-It is better and recommended to use a `service` module with KV arguments. Like :
+### Recommended
+
+It is better to use a `service` module with KV arguments.
 
 ```yml
 - name: restart nginx
@@ -25,3 +26,5 @@ It is better and recommended to use a `service` module with KV arguments. Like :
     state: restarted
 ```
 """
+
+weight = 70

@@ -1,10 +1,8 @@
-title = "Found the usage of `local_action`"
+title = "Replace `local_action` with `delegate_to: localhost`"
 severity = "minor"
 category = "style"
 description = """
-Using `delegate_to: localhost` is recommended over `local_action` since
-`local_action` is rarely seen these days and can be deemed equivalent to
-`delegate_to: localhost` in terms of advantages and disadvantages, but with the
-additional disadvantage of being a very unusual style, adding a readability
-penalty.
+`local_action` is equivalent to `delegate_to: localhost` in terms of functionality, but it is not very readable, and does not match the style of typical Ansible tasks.
 """
+
+weight = 40

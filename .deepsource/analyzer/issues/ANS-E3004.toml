@@ -2,10 +2,25 @@ title = "Environment variables don't work as part of command"
 severity = "major"
 category = "bug-risk"
 description = """
-Environment variables should be passed to `shell` or `command` through
-environment argument.
+Command module does not accept setting environment variables inline.
 
-For example :
+Use `environment:` to set environment variables or use `shell` module which accepts both.
+
+## Example
+
+### Bad practice
+
+```yml
+- name: install ruby 2.3.1
+  command: CONFIGURE_OPTS='--disable-install-doc' RBENV_ROOT='{{ rbenv_root }}' rbenv install {{ rbenv_ruby_version }}
+  args:
+    creates: '{{ rbenv_root }}/versions/{{ rbenv_ruby_version }}/bin/ruby'
+  vars:
+    rbenv_root: /usr/local/rbenv
+    rbenv_ruby_version: 2.3.1
+```
+
+### Recommended
 
 ```yml
 ---
@@ -22,3 +37,5 @@ For example :
     PATH: '{{ rbenv_root }}/bin:{{ rbenv_root }}/shims:{{ rbenv_plugins }}/ruby-build/bin:{{ ansible_env.PATH }}'
 ```
 """
+
+weight = 80
