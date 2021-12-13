@@ -1,5 +1,5 @@
 name = "Ansible Lint"
 description = "Run ansible-lint on playbooks, roles and collections."
-analysis_command = "python3 /app/main.py"
+analysis_command = "PATH=/toolbox/venv/bin:$PATH PYTHONPATH=/toolbox/venv:$PYTHONPATH python3 /app/main.py"
 category = "language"
 visibility = "public"
