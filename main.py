@@ -1,3 +1,5 @@
+import os
+
 from api.config import config
 from api.reporter import Pep8CLIOutputProcessor
 from api.runner import CLIRunner
@@ -43,7 +45,7 @@ class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
 
 class AnsibleCLIRunner(CLIRunner):
     report_processor = AnsibleLintOutputParser
-    command = ["ansible-lint", "--nocolor", "-p"]
+    command = ["ansible-lint", "--nocolor", "-p", "--project-dir", os.getenv("CODE_PATH")]
 
 
 def main():
