@@ -26,9 +26,9 @@ ISSUE_CODES_MAP = {
 class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
     ALLOWED_EXIT_CODES = [0, 2]
     def get_issues(self):
-        issues = super().get_issues()
+        filtered_issues = []
 
-        for issue in issues:
+        for issue in super().get_issues():
             # The issue code raised by ansible-lint are different from what DeepSource would raise
             try:
                 issue_code = ISSUE_CODES_MAP[issue.issue_code]
@@ -36,13 +36,14 @@ class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
                 continue
 
             issue.issue_code = f"ANS-{issue_code}"
+            filtered_issues.append(issue)
 
-        return issues
+        return filtered_issues
 
 
 class AnsibleCLIRunner(CLIRunner):
     report_processor = AnsibleLintOutputParser
-    command = ["ansible-lint", "--nocolor", "-p", *config.files]
+    command = ["ansible-lint", "--nocolor", "-p"]
 
 
 def main():
