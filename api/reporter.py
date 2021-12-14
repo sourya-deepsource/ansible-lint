@@ -14,9 +14,9 @@ class CLIOutputProcessor:
         pass
 
     def process_results(self):
+        print(f"======{self.result.stderr.decode()}======")
+        print(f"======{self.result.stdout.decode()}======")
         if self.result.returncode not in self.ALLOWED_EXIT_CODES:
-            print(f"======{self.result.stderr.decode()}======")
-            print(f"======{self.result.stdout.decode()}======")
             raise OutputProcessingError(f"Invalid exit code {self.result.returncode}")
 
         report = Report()
