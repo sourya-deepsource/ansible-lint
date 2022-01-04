@@ -12,3 +12,4 @@ visibility = "public"
   image = "cytopia/ansible-lint:5"
   steps = """cp -r . /app
   apk add shadow git grep"""
+
