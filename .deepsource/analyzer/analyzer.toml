@@ -1,3 +1,5 @@
+version = "1"
+
 name = "Ansible Lint"
 description = "Run ansible-lint on playbooks, roles and collections."
 category = "language"
