@@ -1,5 +1,11 @@
 name = "Ansible Lint"
 description = "Run ansible-lint on playbooks, roles and collections."
-analysis_command = "PATH=/toolbox/venv/bin:$PATH PYTHONPATH=/toolbox/venv:$PYTHONPATH python3 /app/main.py"
 category = "language"
 visibility = "public"
+
+[analyzer]
+  command = "python /app/main.py"
+
+[build]
+  image = "cytopia/ansible-lint:5"
+  steps = "cp -r ../../. /app"
