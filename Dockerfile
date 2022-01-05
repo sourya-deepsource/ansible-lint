@@ -1,32 +1,28 @@
-FROM alpine:3.14 AS builder
-
 ARG REGISTRY_NAME
 ARG MARVIN_VERSION
+
+FROM $REGISTRY_NAME/marvin:$MARVIN_VERSION AS marvin
+
+FROM cytopia/ansible-lint:5
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.14/main" >/etc/apk/repositories
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.14/community" >>/etc/apk/repositories
 RUN apk update
-RUN apk add bash curl git grep make
+RUN apk add bash curl git grep make shadow
 
-RUN mkdir /toolbox /macrocode
+RUN mkdir -p /toolbox /app /code /artifacts
 
-COPY . /macrocode
+WORKDIR /code
 
-WORKDIR /macrocode
+RUN cp -r . /app
 
-# Actual analyzer build step
-# All analyzers are expected to have a Makefile inside the .deepsource/analyzer directory in the repo
-RUN cd .deepsource/analyzer && make build
+COPY --from=marvin /toolbox/marvin /toolbox/marvin
 
-FROM us.gcr.io/deepsource-dev/marvin:debian
-
-COPY --from=builder /app /app
-COPY --from=builder /toolbox /toolbox
-
-RUN ln -s /usr/local/bin/python3 /usr/bin/python3
-
+RUN ls -ltra /toolbox /code /
 RUN chmod -R o-rwx /code /toolbox
 RUN chown -R 1000:3000 /toolbox /code
+RUN ls -ltra /toolbox /code /
+
 RUN useradd -u 1000 runner && \
 	mkdir -p /home/runner && \
 	chown -R 1000:3000 /home/runner
@@ -34,3 +30,4 @@ RUN useradd -u 1000 runner && \
 WORKDIR /app
 
 USER 1000
+RUN ls -ltra /toolbox /code /

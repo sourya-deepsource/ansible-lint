@@ -1,14 +1,21 @@
-version = "1"
+name = "Ansible"
+shortcode = "ansible"
+description = "Official analyzer for Ansible. It analyzes Ansible playbooks, roles and collections."
+category = "lang"
+analyzer_type = "core"
+status = "active"
+is_primary = true
 
-name = "Ansible Lint"
-description = "Run ansible-lint on playbooks, roles and collections."
-category = "language"
-visibility = "public"
+documentation_url = "https://deepsource.io/docs/analyzer/shell"
+discuss_url = "https://discuss.deepsource.io/tag/shell"
 
-[analyzer]
-  command = "python /app/main.py"
+# Analyzer Execution Details
+command = "python /app/main.py"
+trigger = "code"
+processors = ["source_code_load", "proc_skip_cq"]
 
-[build]
-  image = "cytopia/ansible-lint:5"
-  steps = """cp -r . /app
-  apk add shadow git grep"""
+# Analyzer Resources Details
+min_cpu_limit = 800
+max_cpu_limit = 1600
+min_memory_limit = 800
+max_memory_limit = 1600

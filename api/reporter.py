@@ -1,5 +1,5 @@
 import re
-from .report import Report, Issue, Location, Coordinate
+from .report import Issue, Location, Coordinate
 
 
 class OutputProcessingError(Exception):
@@ -13,19 +13,13 @@ class CLIOutputProcessor:
     def clean(self):
         pass
 
-    def process_results(self):
+    def process_issues(self):
         print(f"======{self.result.stderr.decode()}======")
         print(f"======{self.result.stdout.decode()}======")
         if self.result.returncode not in self.ALLOWED_EXIT_CODES:
             raise OutputProcessingError(f"Invalid exit code {self.result.returncode}")
 
-        report = Report()
-        # TODO: Add for metrics and errors
-        report.issues = self.get_issues()
-        report.write()
-        report.publish()
-
-        return report
+        return self.get_issues()
 
 
 class Pep8CLIOutputProcessor(CLIOutputProcessor):

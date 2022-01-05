@@ -1,6 +1,5 @@
-import os
-
 from api.config import config
+from api.report import Report
 from api.reporter import Pep8CLIOutputProcessor
 from api.runner import CLIRunner
 
@@ -27,6 +26,7 @@ ISSUE_CODES_MAP = {
 
 class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
     ALLOWED_EXIT_CODES = [0, 2]
+
     def get_issues(self):
         filtered_issues = []
 
@@ -40,16 +40,34 @@ class AnsibleLintOutputParser(Pep8CLIOutputProcessor):
             issue.issue_code = f"ANS-{issue_code}"
             filtered_issues.append(issue)
 
+        print(f"================={len(filtered_issues)}=====================")
         return filtered_issues
 
 
 class AnsibleCLIRunner(CLIRunner):
     report_processor = AnsibleLintOutputParser
-    command = ["ansible-lint", "--nocolor", "-p", "--project-dir", os.getenv("CODE_PATH")]
+
+    def __init__(self, command):
+        self._command = command
+
+    @property
+    def command(self):
+        return self._command
 
 
 def main():
-    AnsibleCLIRunner().run()
+    issues = []
+    for file in config.files:
+        if not (file.endswith(".yml") or file.endswith(".yaml")):
+            continue
+
+        print(f"Running for {file}")
+        issues.extend(AnsibleCLIRunner(["ansible-lint", "--nocolor", "-p", file]).run())
+
+    report = Report()
+    report.issues = issues
+    report.write()
+    report.publish()
 
 
 if __name__ == '__main__':

@@ -11,9 +11,10 @@ class CLIRunner:
         raise NotImplementedError
 
     def run(self):
+        print(f"==============Running {self.command}===============")
         results = subprocess.run(
             self.command,
             capture_output=True,
         )
 
-        return self.report_processor(results).process_results()
+        return self.report_processor(results).process_issues()
