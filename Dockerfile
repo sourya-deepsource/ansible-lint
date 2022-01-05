@@ -18,7 +18,9 @@ WORKDIR /macrocode
 # All analyzers are expected to have a Makefile inside the .deepsource/analyzer directory in the repo
 RUN cd .deepsource/analyzer && make build
 
-FROM us.gcr.io/deepsource-dev/marvin:debian
+FROM $REGISTRY_NAME/marvin:$MARVIN
+
+RUN apt-get update
 
 COPY --from=builder /app /app
 COPY --from=builder /toolbox /toolbox
